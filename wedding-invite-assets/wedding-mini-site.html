@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Антон и Ирина — приглашение на свадьбу</title>
+  <style>
+    :root {
+      --cedar: #223b2a;
+      --cedar-soft: #3f5d47;
+      --sage: #829379;
+      --sage-light: #dce4d6;
+      --milk: #fffaf0;
+      --paper: #fff7e8;
+      --sand: #c6ad85;
+      --blush: #ead6c9;
+      --ink: #283028;
+      --muted: #727866;
+      --line: rgba(83, 103, 76, 0.18);
+      --shadow: 0 26px 80px rgba(34, 59, 42, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 250, 240, 0.88), transparent 34rem),
+        linear-gradient(180deg, #dde5d8 0%, #f7efe2 42%, #fffaf0 100%);
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.envelope-open {
+      overflow: auto;
+    }
+
+    body:not(.envelope-open) {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .opening {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(22, 42, 30, 0.2), rgba(22, 42, 30, 0.28)),
+        url("kedr-wedding-bg.png") center / cover no-repeat;
+      transition: opacity 0.75s ease, visibility 0.75s ease;
+    }
+
+    .opening::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255, 250, 240, 0.68), transparent 18rem),
+        linear-gradient(180deg, rgba(247, 239, 226, 0.38), rgba(34, 59, 42, 0.48));
+      backdrop-filter: blur(1px);
+    }
+
+    body.envelope-open .opening {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition-delay: 1.35s;
+    }
+
+    .opening-inner {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 430px);
+      text-align: center;
+    }
+
+    .opening-kicker {
+      margin: 0 0 28px;
+      color: rgba(255, 250, 240, 0.92);
+      font-size: 0.74rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 20px rgba(20, 36, 26, 0.38);
+    }
+
+    .opening-title {
+      max-width: 420px;
+      margin: 0 auto 28px;
+      color: var(--milk);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 10vw, 4.2rem);
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      text-shadow: 0 18px 48px rgba(20, 36, 26, 0.42);
+    }
+
+    .envelope-button {
+      position: relative;
+      display: block;
+      width: min(82vw, 372px);
+      height: min(52vw, 238px);
+      margin: 0 auto;
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      background: transparent;
+      cursor: pointer;
+      perspective: 1100px;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(.2, .78, .2, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .envelope-scene {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: floatEnvelope 4.2s ease-in-out infinite;
+      filter: drop-shadow(0 30px 42px rgba(20, 36, 26, 0.32));
+    }
+
+    .envelope-shadow {
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: -26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(ellipse at center, rgba(20, 36, 26, 0.28), transparent 68%);
+      transform: rotateX(72deg);
+      opacity: 0.72;
+      animation: shadowPulse 4.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .envelope-body {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 250, 240, 0.48);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.72), transparent 34%),
+        linear-gradient(145deg, #fff9ed, #dfc8a4);
+    }
+
+    .envelope-body::before,
+    .envelope-body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 49.6%, rgba(123, 101, 70, 0.2) 50%, transparent 50.4%);
+      opacity: 0.88;
+    }
+
+    .envelope-body::after {
+      transform: scaleX(-1);
+    }
+
+    .envelope-bottom {
+      position: absolute;
+      inset: auto 0 0;
+      height: 58%;
+      clip-path: polygon(0 100%, 50% 0, 100% 100%);
+      background: linear-gradient(180deg, #efe0c5, #fff8ea);
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      transform-origin: 50% 0%;
+      clip-path: polygon(0 0, 100% 0, 50% 66%);
+      border-radius: 18px 18px 0 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent 34%),
+        linear-gradient(180deg, #fffaf0, #d8bd96);
+      transition: transform 1s cubic-bezier(.2, .78, .2, 1);
+      box-shadow: inset 0 -1px 0 rgba(107, 89, 60, 0.22);
+      backface-visibility: hidden;
+    }
+
+    .envelope-card {
+      position: absolute;
+      left: 8.5%;
+      right: 8.5%;
+      bottom: 14%;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      min-height: 72%;
+      padding: 24px 18px;
+      border: 1px solid rgba(198, 173, 133, 0.44);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.64), transparent 42%),
+        rgba(255, 250, 240, 0.97);
+      color: var(--cedar);
+      transform: translateY(36%);
+      transition: transform 1.1s cubic-bezier(.2, .78, .2, 1) 0.28s;
+      box-shadow: 0 18px 34px rgba(34, 59, 42, 0.12);
+    }
+
+    .envelope-monogram {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 12vw, 4.3rem);
+      line-height: 0.95;
+      letter-spacing: 0.06em;
+    }
+
+    .envelope-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .envelope-seal {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      z-index: 4;
+      display: grid;
+      width: 54px;
+      height: 54px;
+      place-items: center;
+      border-radius: 999px;
+      background: linear-gradient(145deg, var(--sage), var(--cedar-soft));
+      color: var(--milk);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.2rem;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.42s ease, transform 0.42s ease;
+      box-shadow: 0 12px 28px rgba(34, 59, 42, 0.22);
+    }
+
+    .envelope-hint {
+      margin: 26px 0 0;
+      color: rgba(255, 250, 240, 0.94);
+      font-size: 0.94rem;
+      text-shadow: 0 2px 20px rgba(20, 36, 26, 0.46);
+    }
+
+    .envelope-hint span {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 9px 16px;
+      border: 1px solid rgba(255, 250, 240, 0.36);
+      border-radius: 999px;
+      background: rgba(255, 250, 240, 0.12);
+      backdrop-filter: blur(8px);
+    }
+
+    @keyframes floatEnvelope {
+      0%, 100% {
+        transform: translateY(0) rotateX(0deg) rotateZ(-0.4deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotateX(3deg) rotateZ(0.4deg);
+      }
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% {
+        opacity: 0.58;
+        transform: rotateX(72deg) scale(0.94);
+      }
+
+      50% {
+        opacity: 0.34;
+        transform: rotateX(72deg) scale(0.82);
+      }
+    }
+
+    body.is-opening .envelope-button {
+      transform: scale(1.015) rotateX(2deg);
+    }
+
+    body.is-opening .envelope-scene {
+      animation-play-state: paused;
+    }
+
+    body.envelope-open .envelope-flap {
+      transform: rotateX(178deg) translateZ(2px);
+    }
+
+    body.envelope-open .envelope-card {
+      transform: translateY(-44%) translateZ(18px) rotateX(-2deg);
+    }
+
+    body.envelope-open .envelope-seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+
+    body.envelope-open .envelope-shadow {
+      opacity: 0.16;
+      transform: rotateX(72deg) scale(1.08);
+    }
+
+    .site {
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease 1.2s, transform 0.8s ease 1.2s;
+    }
+
+    body.envelope-open .site {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: end;
+      padding: max(28px, env(safe-area-inset-top)) 22px 42px;
+      overflow: hidden;
+      color: var(--milk);
+      background:
+        linear-gradient(180deg, rgba(20, 35, 25, 0.16), rgba(20, 35, 25, 0.62)),
+        url("kedr-wedding-bg.png") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(255, 250, 240, 0.28);
+      border-radius: 26px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 520px);
+      margin: 0 auto;
+    }
+
+    .label {
+      margin: 0 0 18px;
+      color: rgba(255, 250, 240, 0.82);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.7rem, 18vw, 6.6rem);
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: -0.055em;
+    }
+
+    .hero-monogram {
+      margin: 0;
+      color: var(--milk);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(5.8rem, 26vw, 10rem);
+      font-weight: 400;
+      line-height: 0.82;
+      letter-spacing: -0.08em;
+    }
+
+    .hero-names {
+      margin: 24px 0 0;
+      color: rgba(255, 250, 240, 0.94);
+      font-size: clamp(1.3rem, 6vw, 2.2rem);
+      letter-spacing: 0.02em;
+    }
+
+    .amp {
+      display: block;
+      margin-left: 0.08em;
+      color: var(--blush);
+      font-style: italic;
+    }
+
+    .hero-date {
+      margin: 30px 0 0;
+      font-size: clamp(1.55rem, 7vw, 2.6rem);
+      letter-spacing: 0.04em;
+    }
+
+    .hero-copy {
+      max-width: 24rem;
+      margin: 18px 0 0;
+      color: rgba(255, 250, 240, 0.84);
+      font-size: 1.02rem;
+      line-height: 1.62;
+    }
+
+    .scroll-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
+      color: rgba(255, 250, 240, 0.78);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .scroll-note::before {
+      content: "";
+      width: 30px;
+      height: 1px;
+      background: rgba(255, 250, 240, 0.62);
+    }
+
+    .content {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 24px 18px 54px;
+    }
+
+    .section {
+      margin: 18px 0;
+      padding: 30px 24px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 250, 240, 0.76);
+      box-shadow: 0 18px 48px rgba(54, 60, 42, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(28px) scale(0.985);
+      transition:
+        opacity 0.75s ease,
+        transform 0.75s cubic-bezier(.2, .78, .2, 1);
+    }
+
+    [data-reveal].reveal-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .section.dark {
+      color: var(--milk);
+      background:
+        linear-gradient(rgba(34, 59, 42, 0.78), rgba(34, 59, 42, 0.78)),
+        url("kedr-wedding-bg.png") center / cover no-repeat;
+      border-color: rgba(255, 250, 240, 0.16);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--sage);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .dark .eyebrow {
+      color: rgba(255, 250, 240, 0.66);
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--cedar);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 10vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .dark h2 {
+      color: var(--milk);
+    }
+
+    .lead,
+    .section p {
+      color: #535d4a;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .dark p {
+      color: rgba(255, 250, 240, 0.8);
+    }
+
+    .place-name {
+      margin: 24px 0 8px;
+      color: var(--cedar);
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .time {
+      color: var(--cedar);
+      font-size: 1.18rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .timeline-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .letter {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .letter::after,
+    .calendar-section::after,
+    .details-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 14% 12%, rgba(234, 214, 201, 0.4), transparent 18rem),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.38), transparent 42%);
+      pointer-events: none;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 24px;
+      padding: 16px;
+      border: 1px solid rgba(63, 93, 71, 0.14);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.38);
+    }
+
+    .calendar-head {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .calendar-day {
+      position: relative;
+      display: grid;
+      min-height: 38px;
+      place-items: center;
+      border-radius: 14px;
+      color: #53604e;
+      font-size: 0.92rem;
+    }
+
+    .calendar-day.muted {
+      opacity: 0.24;
+    }
+
+    .calendar-day.wedding-day {
+      color: var(--cedar);
+      font-weight: 800;
+    }
+
+    .calendar-ring {
+      position: absolute;
+      inset: 2px;
+      border: 2px solid var(--sand);
+      border-radius: 999px;
+      box-shadow: 0 8px 18px rgba(198, 173, 133, 0.28);
+      animation: ringBounce 1.1s cubic-bezier(.2, .78, .2, 1) 1.4s both;
+    }
+
+    @keyframes ringBounce {
+      0% {
+        opacity: 0;
+        transform: translateY(-80px) scale(0.52) rotate(-18deg);
+      }
+
+      64% {
+        opacity: 1;
+        transform: translateY(8px) scale(1.08) rotate(7deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0);
+      }
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .countdown-item {
+      padding: 14px 8px;
+      border: 1px solid rgba(63, 93, 71, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.4);
+      text-align: center;
+    }
+
+    .countdown-value {
+      display: block;
+      color: var(--cedar);
+      font-size: clamp(1.25rem, 6vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .countdown-label {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .map-card {
+      overflow: hidden;
+      margin-top: 20px;
+      border: 1px solid rgba(63, 93, 71, 0.16);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.44);
+    }
+
+    .map-card iframe {
+      display: block;
+      width: 100%;
+      height: 260px;
+      border: 0;
+      filter: saturate(0.72) contrast(0.95);
+    }
+
+    .map-link,
+    .contact-link {
+      color: var(--cedar);
+      font-weight: 700;
+      text-decoration-color: rgba(34, 59, 42, 0.28);
+      text-underline-offset: 4px;
+    }
+
+    .details-list {
+      display: grid;
+      gap: 14px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .details-list li {
+      padding: 16px 18px;
+      border: 1px solid rgba(63, 93, 71, 0.12);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.36);
+      color: #535d4a;
+      line-height: 1.55;
+    }
+
+    .palette {
+      display: flex;
+      gap: 10px;
+      margin: 24px 0 20px;
+    }
+
+    .swatch {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(40, 48, 40, 0.08);
+      border-radius: 999px;
+      box-shadow: 0 8px 22px rgba(40, 48, 40, 0.08);
+    }
+
+    .rsvp-form {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field span {
+      color: var(--cedar);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(63, 93, 71, 0.24);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.58);
+      color: var(--ink);
+      outline: none;
+      padding: 15px 16px;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 4px rgba(130, 147, 121, 0.18);
+    }
+
+    .submit {
+      margin-top: 6px;
+      border: 0;
+      border-radius: 999px;
+      padding: 16px 20px;
+      background: var(--cedar);
+      color: var(--milk);
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 16px 30px rgba(34, 59, 42, 0.2);
+    }
+
+    .form-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .toast {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(130, 147, 121, 0.16);
+      color: var(--cedar);
+      line-height: 1.45;
+    }
+
+    .toast.visible {
+      display: block;
+    }
+
+    .footer {
+      padding: 24px 0 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 760px) {
+      body {
+        background:
+          radial-gradient(circle at 50% 0%, rgba(255, 250, 240, 0.9), transparent 42rem),
+          linear-gradient(180deg, #dce5d8 0%, #f7efe2 48%, #fffaf0 100%);
+      }
+
+      .hero {
+        min-height: 760px;
+      }
+
+      .section {
+        padding: 38px 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="opening" aria-label="Открытие приглашения">
+    <div class="opening-inner">
+      <p class="opening-kicker">Антон и Ирина</p>
+      <h2 class="opening-title">Вы приглашены на свадьбу</h2>
+      <button class="envelope-button" type="button" aria-label="Открыть приглашение">
+        <span class="envelope-scene">
+          <span class="envelope-card" aria-hidden="true">
+            <span>
+              <span class="envelope-monogram">А &amp; И</span>
+              <span class="envelope-note">10.09.2026</span>
+            </span>
+          </span>
+          <span class="envelope-body" aria-hidden="true"></span>
+          <span class="envelope-bottom" aria-hidden="true"></span>
+          <span class="envelope-flap" aria-hidden="true"></span>
+          <span class="envelope-seal" aria-hidden="true">К</span>
+        </span>
+        <span class="envelope-shadow" aria-hidden="true"></span>
+      </button>
+      <p class="envelope-hint"><span>Нажмите на конверт</span></p>
+    </div>
+  </section>
+
+  <main class="site" aria-label="Свадебное приглашение Антона и Ирины">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="label">Приглашение на свадьбу</p>
+        <h1 class="hero-monogram">A&amp;I</h1>
+        <div class="hero-names">Антон и Ирина</div>
+        <div class="hero-date">10 сентября 2026</div>
+        <p class="hero-copy">Один день, один лесной вечер и очень важное «да».</p>
+        <div class="scroll-note">листайте ниже</div>
+      </div>
+    </section>
+
+    <div class="content">
+      <section class="section letter" data-reveal>
+        <p class="eyebrow">Дорогие гости</p>
+        <h2>Будем рядом</h2>
+        <p>Мы приглашаем вас на день, в который официально запустим наш самый любимый совместный проект.</p>
+        <p>Будем счастливы разделить с вами нашу свадьбу<br>10 сентября 2026 года в Москве.</p>
+      </section>
+
+      <section class="section calendar-section" data-reveal>
+        <p class="eyebrow">Дата</p>
+        <h2>Сентябрь 2026</h2>
+        <div class="calendar-head" aria-hidden="true">
+          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+        </div>
+        <div class="calendar" aria-label="Календарь: сентябрь 2026, свадьба 10 сентября">
+          <span class="calendar-day muted">31</span>
+          <span class="calendar-day">1</span>
+          <span class="calendar-day">2</span>
+          <span class="calendar-day">3</span>
+          <span class="calendar-day">4</span>
+          <span class="calendar-day">5</span>
+          <span class="calendar-day">6</span>
+          <span class="calendar-day">7</span>
+          <span class="calendar-day">8</span>
+          <span class="calendar-day">9</span>
+          <span class="calendar-day wedding-day">10<span class="calendar-ring" aria-hidden="true"></span></span>
+          <span class="calendar-day">11</span>
+          <span class="calendar-day">12</span>
+          <span class="calendar-day">13</span>
+          <span class="calendar-day">14</span>
+          <span class="calendar-day">15</span>
+          <span class="calendar-day">16</span>
+          <span class="calendar-day">17</span>
+          <span class="calendar-day">18</span>
+          <span class="calendar-day">19</span>
+          <span class="calendar-day">20</span>
+          <span class="calendar-day">21</span>
+          <span class="calendar-day">22</span>
+          <span class="calendar-day">23</span>
+          <span class="calendar-day">24</span>
+          <span class="calendar-day">25</span>
+          <span class="calendar-day">26</span>
+          <span class="calendar-day">27</span>
+          <span class="calendar-day">28</span>
+          <span class="calendar-day">29</span>
+          <span class="calendar-day">30</span>
+          <span class="calendar-day muted">1</span>
+          <span class="calendar-day muted">2</span>
+          <span class="calendar-day muted">3</span>
+          <span class="calendar-day muted">4</span>
+        </div>
+        <p class="lead">До начала торжества осталось:</p>
+        <div class="countdown" id="countdown" aria-label="Обратный отсчёт до свадьбы">
+          <div class="countdown-item"><span class="countdown-value" data-countdown="days">—</span><span class="countdown-label">дней</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-countdown="hours">—</span><span class="countdown-label">часов</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-countdown="minutes">—</span><span class="countdown-label">минут</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-countdown="seconds">—</span><span class="countdown-label">секунд</span></div>
+        </div>
+      </section>
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">Программа</p>
+        <h2>План вечера</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="time">16:30</div>
+            <p class="timeline-title">Сбор гостей</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time">17:30</div>
+            <p class="timeline-title">Церемония</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time">18:00</div>
+            <p class="timeline-title">Банкет</p>
+          </div>
+          <div class="timeline-item">
+            <div class="time">23:00</div>
+            <p class="timeline-title">Завершение вечера</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dark" data-reveal>
+        <p class="eyebrow">Локация</p>
+        <h2>Ресторан «КЕДР»</h2>
+        <p>Ждём вас по адресу:<br><a class="map-link" href="https://yandex.ru/maps/-/CCUVyNcJ9D" target="_blank" rel="noreferrer">д. Зайцево, ул. Сосновая д. 3</a></p>
+        <div class="map-card">
+          <iframe src="https://yandex.ru/map-widget/v1/?ll=36.935441%2C55.624759&mode=search&oid=223651909682&ol=biz&sll=36.935441%2C55.624759&text=%D0%B4.%20%D0%97%D0%B0%D0%B9%D1%86%D0%B5%D0%B2%D0%BE%2C%20%D1%83%D0%BB.%20%D0%A1%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%B0%D1%8F%2C%203&z=14" loading="lazy" title="Яндекс карта: д. Зайцево, ул. Сосновая д. 3"></iframe>
+        </div>
+      </section>
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">Dress code</p>
+        <h2>Природные оттенки</h2>
+        <div class="palette" aria-hidden="true">
+          <span class="swatch" style="background:#fff7e8"></span>
+          <span class="swatch" style="background:#dce4d6"></span>
+          <span class="swatch" style="background:#cbb99a"></span>
+          <span class="swatch" style="background:#c6ad85"></span>
+          <span class="swatch" style="background:#6f8068"></span>
+        </div>
+        <p>Будем рады, если вы поддержите спокойную природную палитру: молочные, песочные, оливковые, шалфейные, серо-бежевые и мягкие коричневые оттенки. Просим избегать слишком ярких и кислотных цветов — пусть всё будет нежно, спокойно и в гармонии с лесом.</p>
+      </section>
+
+      <section class="section details-section" data-reveal>
+        <p class="eyebrow">Детали</p>
+        <h2>Пара слов о важном</h2>
+        <ul class="details-list">
+          <li>Деньги и ваше настроение — лучший подарок для нас. Всё остальное у нас уже есть.</li>
+          <li>Приглашение рассчитано персонально. Будем благодарны, если вы придёте без сопровождающих.</li>
+        </ul>
+      </section>
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">Анкета</p>
+        <h2>Пожалуйста, ответьте до 1 августа</h2>
+        <p class="lead">Нам нужны только самые необходимые вещи, чтобы всё подготовить спокойно и красиво.</p>
+
+        <form class="rsvp-form" id="rsvpForm">
+          <label class="field">
+            <span>Ваше имя</span>
+            <input name="name" autocomplete="name" required placeholder="Например, Анна Иванова">
+          </label>
+
+          <label class="field">
+            <span>Вы сможете быть с нами?</span>
+            <select name="attendance" required>
+              <option value="">Выберите вариант</option>
+              <option>Да, с радостью буду</option>
+              <option>К сожалению, не смогу</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Предпочтения по напиткам</span>
+            <select name="drinks">
+              <option value="">Выберите предпочтение</option>
+              <option>Вино</option>
+              <option>Игристое</option>
+              <option>Крепкие напитки</option>
+              <option>Безалкогольные напитки</option>
+              <option>Другое / напишу ниже</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Пищевые ограничения</span>
+            <textarea name="food" placeholder="Аллергии, вегетарианство или другие важные детали"></textarea>
+          </label>
+
+          <label class="field">
+            <span>Комментарий</span>
+            <textarea name="message" placeholder="Если есть что-то важное, напишите здесь"></textarea>
+          </label>
+
+          <button class="submit" type="submit">Отправить ответ</button>
+          <p class="form-note">Ответы будут сохраняться в Google Таблицу. Если что-то пойдёт не так, напишите нам по номеру из блока «Контакты».</p>
+          <div class="toast" id="toast" role="status">Спасибо! Ваш ответ отправлен.</div>
+        </form>
+      </section>
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">Контакты</p>
+        <h2>Если есть вопрос</h2>
+        <p>Можно написать или позвонить:<br><a class="contact-link" href="tel:+79057840335">+7 905 784 03 35</a></p>
+      </section>
+
+      <footer class="footer">
+        С любовью,<br>
+        Антон и Ирина
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const openEnvelope = () => {
+      if (document.body.classList.contains('is-opening')) return;
+
+      document.body.classList.add('is-opening');
+      window.setTimeout(() => {
+        document.body.classList.add('envelope-open');
+      }, 120);
+
+      window.setTimeout(() => {
+        document.querySelector('.hero')?.scrollIntoView({ block: 'start' });
+      }, 1700);
+    };
+
+    document.querySelector('.envelope-button')?.addEventListener('click', openEnvelope);
+
+    const revealItems = document.querySelectorAll('[data-reveal]');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const weddingStart = new Date('2026-09-10T16:30:00+03:00');
+    const countdownNodes = {
+      days: document.querySelector('[data-countdown="days"]'),
+      hours: document.querySelector('[data-countdown="hours"]'),
+      minutes: document.querySelector('[data-countdown="minutes"]'),
+      seconds: document.querySelector('[data-countdown="seconds"]'),
+    };
+
+    const updateCountdown = () => {
+      const diff = Math.max(0, weddingStart.getTime() - Date.now());
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      countdownNodes.days.textContent = String(days);
+      countdownNodes.hours.textContent = String(hours).padStart(2, '0');
+      countdownNodes.minutes.textContent = String(minutes).padStart(2, '0');
+      countdownNodes.seconds.textContent = String(seconds).padStart(2, '0');
+    };
+
+    updateCountdown();
+    window.setInterval(updateCountdown, 1000);
+
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID_HERE/exec';
+    const rsvpForm = document.querySelector('#rsvpForm');
+    const toast = document.querySelector('#toast');
+
+    rsvpForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (GOOGLE_SCRIPT_URL.includes('PASTE_YOUR_DEPLOYMENT_ID_HERE')) {
+        toast.textContent = 'Анкета почти готова: нужно вставить ссылку Google Apps Script в код сайта.';
+        toast.classList.add('visible');
+        return;
+      }
+
+      const submitButton = rsvpForm.querySelector('.submit');
+      const formData = new FormData(rsvpForm);
+      formData.append('submittedAt', new Date().toISOString());
+      formData.append('source', location.href);
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Отправляем...';
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData,
+        });
+
+        toast.textContent = 'Спасибо! Ваш ответ отправлен.';
+        toast.classList.add('visible');
+        rsvpForm.reset();
+      } catch (error) {
+        toast.textContent = 'Не удалось отправить ответ. Пожалуйста, попробуйте ещё раз или напишите нам.';
+        toast.classList.add('visible');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Отправить ответ';
+      }
+    });
+  </script>
+</body>
+</html>
