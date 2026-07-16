@@ -2579,6 +2579,34 @@
       margin-bottom: 0;
     }
 
+    .bloom-game,
+    .bloom-game * {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .bloom-seal {
+      touch-action: none;
+      -webkit-user-drag: none;
+    }
+
+    .gate-reveal {
+      overflow: hidden;
+      border-radius: 36px;
+    }
+
+    .gate-reveal h1 .join {
+      margin: .48em 0 .38em;
+      padding-left: .18em;
+      font-family: var(--serif);
+      font-size: .14em;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: .18em;
+      text-transform: lowercase;
+    }
+
     .gate-kicker span:first-child {
       color: #4b504c;
       font-family: var(--serif);
@@ -2850,6 +2878,7 @@
 
     .wishes-section {
       padding: 54px 20px 72px;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .wishes-section h2 {
@@ -2859,16 +2888,20 @@
 
     .wish-carousel {
       width: min(100%, 720px);
+      min-width: 0;
+      max-width: 100%;
       margin: 0 auto;
+      overflow: hidden;
     }
 
     .wishes {
       display: flex;
-      gap: 14px;
+      gap: 0;
       overflow-x: auto;
       margin: 0;
-      padding: 8px 4px 18px;
+      padding: 6px 0 14px;
       scroll-behavior: smooth;
+      scroll-padding: 0;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       overscroll-behavior-x: contain;
@@ -2879,14 +2912,16 @@
 
     .wish-card {
       box-sizing: border-box;
-      flex: 0 0 calc(100% - 8px);
+      flex: 0 0 100%;
+      min-width: 100%;
       min-height: clamp(270px, 36svh, 400px);
       padding: clamp(34px, 6vw, 62px);
-      border: 1px solid rgba(133,150,142,.24);
-      border-radius: 48px 14px 48px 14px;
-      background: linear-gradient(145deg, rgba(255,255,255,.72), rgba(232,220,219,.4));
+      border: 1px solid rgba(133,150,142,.18);
+      border-radius: 32px;
+      background: rgba(255,255,255,.58);
+      box-shadow: 0 10px 28px rgba(75,87,80,.055), inset 0 0 0 1px rgba(255,255,255,.38);
       clip-path: none;
-      scroll-snap-align: center;
+      scroll-snap-align: start;
       scroll-snap-stop: always;
     }
 
@@ -2895,6 +2930,26 @@
     .wish-card p {
       font-size: clamp(1rem, 2.8vw, 1.22rem);
       line-height: 1.7;
+    }
+
+    @media (max-width: 520px) {
+      .wishes-section {
+        padding-right: 18px;
+        padding-left: 18px;
+      }
+
+      .wishes-section .chapter-inner {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .wishes-section h2 {
+        font-size: clamp(2.35rem, 10vw, 3.4rem);
+        line-height: 1;
+        text-wrap: balance;
+      }
+      .wish-card { padding: 30px 24px; }
+      .wish-card p { font-size: .98rem; line-height: 1.62; }
     }
 
     .wish-controls {
@@ -3237,7 +3292,7 @@
           </div>
         </div>
         <div class="gate-reveal" aria-hidden="true">
-          <h1><span>Антон</span><span class="join">и</span><span>Ирина</span></h1>
+          <h1><span>Антон</span><span class="join">and</span><span>Ирина</span></h1>
           <div class="hero-date"><span>10</span><span>09</span><span>2026</span></div>
         </div>
       </div>
@@ -3286,7 +3341,6 @@
           <h2>Место встречи</h2>
           <figure class="venue-photo">
             <img src="les-event-house.jpeg" alt="Терраса «ЛЕС EVENT HOUSE» среди деревьев и вечерних огней">
-            <figcaption>Терраса «ЛЕС EVENT HOUSE»</figcaption>
           </figure>
           <div class="location-card">
             <div class="location-name">«ЛЕС EVENT HOUSE»</div>
@@ -3333,8 +3387,8 @@
           <h2>Пара слов о важном</h2>
           <div class="wish-carousel">
             <div class="wishes" data-wish-track aria-label="Три пожелания, листайте слева направо">
-              <article class="wish-card"><p>Будем очень признательны, если Вы воздержитесь от криков «Горько». Ведь поцелуй — это знак выражения чувств, и он не может быть по заказу.</p></article>
               <article class="wish-card"><p>Пожалуйста, не дарите нам цветы! Если хотите подарить нам ценный и нужный подарок, мы будем очень благодарны за вклад в бюджет нашей молодой семьи.</p></article>
+              <article class="wish-card"><p>Будем очень признательны, если Вы воздержитесь от криков «Горько». Ведь поцелуй — это знак выражения чувств, и он не может быть по заказу.</p></article>
               <article class="wish-card"><p>Мы открыли группу в telegram для всех гостей. Давайте добавлять в нее свадебные видеоролики и фотографии, чтобы сохранить воспоминания об этом дне.</p></article>
             </div>
             <div class="wish-controls" aria-label="Навигация по пожеланиям">
@@ -3349,7 +3403,7 @@
       <section class="chapter rsvp">
         <div class="chapter-inner" data-reveal>
           <p class="chapter-eyebrow">Анкета</p>
-          <h2>Ответьте до 1 августа</h2>
+          <h2>Ответьте до 10 августа</h2>
           <p class="lead">Ваш ответ поможет нам всё подготовить спокойно и красиво.</p>
           <form class="rsvp-form" id="rsvpForm">
             <label class="field"><span>Ваше имя</span><input name="name" autocomplete="name" required placeholder="Например, Анна Иванова"></label>
@@ -3387,7 +3441,7 @@
     const heroStage = document.querySelector('.hero');
     const hero = document.querySelector('.hero');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const HOLD_DURATION = 1650;
+    const HOLD_DURATION = 1300;
     const CHARGE_LENGTH = 339.3;
     let holdFrame = 0;
     let holdStartedAt = 0;
@@ -3457,6 +3511,9 @@
     bloomSeal?.addEventListener('pointerup', cancelHold);
     bloomSeal?.addEventListener('pointercancel', cancelHold);
     bloomSeal?.addEventListener('lostpointercapture', cancelHold);
+    bloomSeal?.addEventListener('contextmenu', (event) => event.preventDefault());
+    bloomSeal?.addEventListener('selectstart', (event) => event.preventDefault());
+    bloomSeal?.addEventListener('dragstart', (event) => event.preventDefault());
     bloomSeal?.addEventListener('keydown', (event) => {
       if ((event.key === 'Enter' || event.key === ' ') && !event.repeat) startHold(event);
     });
