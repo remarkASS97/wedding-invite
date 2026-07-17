@@ -1517,9 +1517,28 @@
     .rsvp-form {
       display: grid;
       gap: 18px;
-      max-width: 560px;
+      max-width: 760px;
       margin: 42px auto 0;
-      text-align: left;
+      text-align: center;
+    }
+
+    .yandex-form-frame {
+      width: 100%;
+      min-height: 640px;
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: 28px;
+      background: rgba(255,255,255,.52);
+      box-shadow: 0 20px 42px rgba(63,73,99,.16);
+    }
+
+    .yandex-form-open {
+      width: min(100%, 360px);
+      margin: 0 auto 4px;
+    }
+
+    @media (max-width: 640px) {
+      .rsvp-form { margin-top: 28px; }
+      .yandex-form-frame { display: none; }
     }
 
     .field { display: grid; gap: 8px; }
@@ -1555,6 +1574,9 @@
     }
 
     .submit {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       position: relative;
       overflow: hidden;
       margin-top: 16px;
@@ -1567,6 +1589,8 @@
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
       box-shadow: 0 18px 38px rgba(63,73,99,.22);
       cursor: pointer;
     }
@@ -3405,16 +3429,12 @@
           <p class="chapter-eyebrow">Анкета</p>
           <h2>Ответьте до 10 августа</h2>
           <p class="lead">Ваш ответ поможет нам всё подготовить спокойно и красиво.</p>
-          <form class="rsvp-form" id="rsvpForm">
-            <label class="field"><span>Ваше имя</span><input name="name" autocomplete="name" required placeholder="Например, Анна Иванова"></label>
-            <label class="field"><span>Вы сможете быть с нами?</span><select name="attendance" required><option value="">Выберите вариант</option><option>Да, с радостью буду</option><option>К сожалению, не смогу</option></select></label>
-            <label class="field"><span>Предпочтения по напиткам</span><select name="drinks"><option value="">Выберите предпочтение</option><option>Вино</option><option>Игристое</option><option>Крепкие напитки</option><option>Безалкогольные напитки</option><option>Другое / напишу ниже</option></select></label>
-            <label class="field"><span>Пищевые ограничения</span><textarea name="food" placeholder="Аллергии, вегетарианство или другие важные детали"></textarea></label>
-            <label class="field"><span>Комментарий</span><textarea name="message" placeholder="Если есть что-то важное, напишите здесь"></textarea></label>
-            <button class="submit" type="submit">Отправить ответ</button>
-            <p class="form-note">Ответы будут сохраняться в Google Таблицу. Если что-то пойдёт не так, свяжитесь с нами удобным способом.</p>
-            <div class="toast" id="toast" role="status">Спасибо! Ваш ответ отправлен.</div>
-          </form>
+          <div class="rsvp-form" id="rsvpForm">
+            <a class="submit yandex-form-open" id="yandexFormLink" href="https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29/" target="_blank" rel="noopener noreferrer">Заполнить анкету</a>
+            <iframe class="yandex-form-frame" id="yandexFormFrame" src="https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29?iframe=1" frameborder="0" name="ya-form-6a5a374390fa7b83ff9f5e29" width="650" title="Анкета гостей" loading="lazy"></iframe>
+            <p class="form-note">Анкета откроется в отдельной вкладке. Если встроенная версия не загрузилась, нажмите кнопку выше.</p>
+            <script src="https://forms.yandex.ru/_static/embed.js" defer></script>
+          </div>
         </div>
       </section>
 
@@ -3441,11 +3461,7 @@
     const heroStage = document.querySelector('.hero');
     const hero = document.querySelector('.hero');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const HOLD_DURATION = 1300;
     const CHARGE_LENGTH = 339.3;
-    let holdFrame = 0;
-    let holdStartedAt = 0;
-    let holdActive = false;
 
     const setHoldProgress = (progress) => {
       const value = Math.max(0, Math.min(1, progress));
@@ -3456,8 +3472,6 @@
     const activateInvitation = () => {
       if (invitationGate.classList.contains('is-complete') || heroStage.classList.contains('is-blooming')) return;
 
-      holdActive = false;
-      window.cancelAnimationFrame(holdFrame);
       setHoldProgress(1);
       invitationGate.classList.remove('is-holding');
       heroStage.classList.add('is-blooming');
@@ -3478,47 +3492,19 @@
       }, reduceMotion ? 90 : 2680);
     };
 
-    const updateHold = (now) => {
-      if (!holdActive) return;
-      const progress = Math.min(1, (now - holdStartedAt) / HOLD_DURATION);
-      setHoldProgress(progress);
-      if (progress >= 1) {
-        activateInvitation();
-        return;
-      }
-      holdFrame = window.requestAnimationFrame(updateHold);
-    };
-
-    const startHold = (event) => {
-      if (holdActive || bloomSeal.disabled || heroStage.classList.contains('is-blooming')) return;
+    const openBySealClick = (event) => {
+      if (bloomSeal.disabled || heroStage.classList.contains('is-blooming')) return;
       event.preventDefault();
-      if (event.pointerId !== undefined) bloomSeal.setPointerCapture?.(event.pointerId);
-      holdActive = true;
-      holdStartedAt = performance.now();
-      invitationGate.classList.add('is-holding');
-      holdFrame = window.requestAnimationFrame(updateHold);
+      activateInvitation();
     };
 
-    const cancelHold = () => {
-      if (!holdActive) return;
-      holdActive = false;
-      window.cancelAnimationFrame(holdFrame);
-      invitationGate.classList.remove('is-holding');
-      setHoldProgress(0);
-    };
-
-    bloomSeal?.addEventListener('pointerdown', startHold);
-    bloomSeal?.addEventListener('pointerup', cancelHold);
-    bloomSeal?.addEventListener('pointercancel', cancelHold);
-    bloomSeal?.addEventListener('lostpointercapture', cancelHold);
+    setHoldProgress(0);
+    bloomSeal?.addEventListener('click', openBySealClick);
     bloomSeal?.addEventListener('contextmenu', (event) => event.preventDefault());
     bloomSeal?.addEventListener('selectstart', (event) => event.preventDefault());
     bloomSeal?.addEventListener('dragstart', (event) => event.preventDefault());
     bloomSeal?.addEventListener('keydown', (event) => {
-      if ((event.key === 'Enter' || event.key === ' ') && !event.repeat) startHold(event);
-    });
-    bloomSeal?.addEventListener('keyup', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') cancelHold();
+      if ((event.key === 'Enter' || event.key === ' ') && !event.repeat) openBySealClick(event);
     });
 
     const previousSlideButton = document.querySelector('[data-slide-prev]');
@@ -3714,39 +3700,9 @@
     updateCountdown();
     window.setInterval(updateCountdown, 1000);
 
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID_HERE/exec';
-    const rsvpForm = document.querySelector('#rsvpForm');
-    const toast = document.querySelector('#toast');
-
-    rsvpForm?.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      if (GOOGLE_SCRIPT_URL.includes('PASTE_YOUR_DEPLOYMENT_ID_HERE')) {
-        toast.textContent = 'Анкета почти готова: нужно вставить ссылку Google Apps Script в код сайта.';
-        toast.classList.add('visible');
-        return;
-      }
-
-      const submitButton = rsvpForm.querySelector('.submit');
-      const formData = new FormData(rsvpForm);
-      formData.append('submittedAt', new Date().toISOString());
-      formData.append('source', location.href);
-      submitButton.disabled = true;
-      submitButton.textContent = 'Отправляем...';
-
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
-        toast.textContent = 'Спасибо! Ваш ответ отправлен.';
-        toast.classList.add('visible');
-        rsvpForm.reset();
-      } catch (error) {
-        toast.textContent = 'Не удалось отправить ответ. Пожалуйста, попробуйте ещё раз или напишите нам.';
-        toast.classList.add('visible');
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Отправить ответ';
-      }
-    });
+    const YANDEX_FORM_URL = 'https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29/';
+    const yandexFormLink = document.querySelector('#yandexFormLink');
+    if (yandexFormLink) yandexFormLink.href = YANDEX_FORM_URL;
   </script>
 </body>
 </html>
