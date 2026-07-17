@@ -1224,6 +1224,27 @@
     .intro-symbol::before { left: 6px; transform: translateY(-50%) rotate(19deg); }
     .intro-symbol::after { right: 6px; transform: translateY(-50%) rotate(-19deg); }
 
+    .intro-flower {
+      display: block;
+      width: 118px;
+      height: 118px;
+      margin: 0 auto 28px;
+      overflow: visible;
+      filter: drop-shadow(0 14px 18px rgba(101, 120, 109, .13));
+    }
+
+    .intro-flower .petal {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: 50% 82%;
+    }
+
+    .intro-flower .flower-center,
+    .intro-flower .flower-stem,
+    .intro-flower .flower-leaf {
+      opacity: 0;
+    }
+
     .date-section {
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.88), transparent 20rem),
@@ -1534,6 +1555,31 @@
     .yandex-form-open {
       width: min(100%, 360px);
       margin: 0 auto 4px;
+    }
+
+    .rsvp-complete-card {
+      display: none;
+      padding: 34px 26px;
+      border: 1px solid rgba(131, 149, 140, .22);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .58);
+      box-shadow: 0 16px 34px rgba(75, 87, 80, .08), inset 0 0 0 1px rgba(255, 255, 255, .42);
+    }
+
+    .rsvp-form.is-complete .yandex-form-open,
+    .rsvp-form.is-complete .yandex-form-frame,
+    .rsvp-form.is-complete .form-note,
+    .rsvp-form.is-complete > script { display: none; }
+
+    .rsvp-form.is-complete .rsvp-complete-card { display: block; }
+
+    .rsvp-complete-card strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #4f5c55;
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 7vw, 2.6rem);
+      font-weight: 400;
     }
 
     @media (max-width: 640px) {
@@ -2621,14 +2667,32 @@
     }
 
     .gate-reveal h1 .join {
-      margin: .48em 0 .38em;
-      padding-left: .18em;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: .8em;
+      margin: .72rem 0;
+      padding: 0;
       font-family: var(--serif);
-      font-size: .14em;
+      font-size: .27em;
       font-style: italic;
       font-weight: 400;
-      letter-spacing: .18em;
-      text-transform: lowercase;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .gate-reveal h1 .join::before,
+    .gate-reveal h1 .join::after {
+      content: "";
+      width: 1.8em;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(126, 143, 134, .68));
+    }
+
+    .gate-reveal h1 .join::after {
+      background: linear-gradient(90deg, rgba(126, 143, 134, .68), transparent);
     }
 
     .gate-kicker span:first-child {
@@ -3006,15 +3070,22 @@
     }
 
     .wish-position {
-      min-width: 76px;
+      display: grid;
+      grid-template-columns: 1ch 1.2ch 1ch;
+      align-items: center;
+      justify-content: center;
+      min-width: 88px;
       color: #66746d;
       font-family: var(--serif);
       font-size: 1.3rem;
-      letter-spacing: .12em;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+      letter-spacing: 0;
       text-align: center;
     }
 
-    .wish-divider { margin: 0 .3em; color: #a2ada7; }
+    .wish-position span { width: 100%; text-align: center; }
+    .wish-divider { margin: 0; color: #a2ada7; }
 
     .dress-code {
       padding: 52px 18px 74px;
@@ -3069,6 +3140,36 @@
 
     .intro[data-slide-state="active"] .intro-symbol::before { animation: introLeafLeft .9s cubic-bezier(.16,.82,.2,1) .48s both; }
     .intro[data-slide-state="active"] .intro-symbol::after { animation: introLeafRight .9s cubic-bezier(.16,.82,.2,1) .6s both; }
+
+    .intro[data-slide-state="active"] .intro-flower .petal {
+      animation: introPetalBloom .85s cubic-bezier(.16,.82,.2,1) var(--petal-delay) both;
+    }
+
+    .intro[data-slide-state="active"] .intro-flower .flower-center {
+      animation: introFlowerCenter .65s cubic-bezier(.16,.82,.2,1) .82s both;
+    }
+
+    .intro[data-slide-state="active"] .intro-flower .flower-stem,
+    .intro[data-slide-state="active"] .intro-flower .flower-leaf {
+      animation: introFlowerStem .8s ease .25s both;
+    }
+
+    @keyframes introPetalBloom {
+      from { opacity: 0; transform: translateY(9px) scale(.08, .03) rotate(-9deg); filter: blur(3px); }
+      68% { opacity: 1; transform: translateY(-2px) scale(1.08, .96) rotate(2deg); filter: none; }
+      to { opacity: .96; transform: none; filter: none; }
+    }
+
+    @keyframes introFlowerCenter {
+      from { opacity: 0; transform: scale(.2); transform-origin: center; }
+      72% { opacity: 1; transform: scale(1.14); transform-origin: center; }
+      to { opacity: 1; transform: none; transform-origin: center; }
+    }
+
+    @keyframes introFlowerStem {
+      from { opacity: 0; stroke-dasharray: 90; stroke-dashoffset: 90; }
+      to { opacity: .9; stroke-dasharray: 90; stroke-dashoffset: 0; }
+    }
 
     @keyframes botanicalMarkIn {
       from { opacity: 0; transform: scale(.35) rotate(-12deg); }
@@ -3176,7 +3277,8 @@
       .rsvp-form .field:nth-child(5),
       .rsvp-form .submit,
       .rsvp-form .form-note,
-      .rsvp-form .toast { grid-column: 1 / -1; }
+      .rsvp-form .toast,
+      .rsvp-form .rsvp-complete-card { grid-column: 1 / -1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -3316,7 +3418,7 @@
           </div>
         </div>
         <div class="gate-reveal" aria-hidden="true">
-          <h1><span>Антон</span><span class="join">and</span><span>Ирина</span></h1>
+          <h1><span>Антон</span><span class="join">&amp;</span><span>Ирина</span></h1>
           <div class="hero-date"><span>10</span><span>09</span><span>2026</span></div>
         </div>
       </div>
@@ -3326,7 +3428,36 @@
     <div class="story">
       <section class="chapter intro">
         <div class="chapter-inner" data-reveal>
-          <div class="intro-symbol" aria-hidden="true"></div>
+          <svg class="intro-flower" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="introPetal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#fffaf6"/>
+                <stop offset=".58" stop-color="#e8cbd1"/>
+                <stop offset="1" stop-color="#caaeb8"/>
+              </linearGradient>
+              <radialGradient id="introHeart">
+                <stop offset="0" stop-color="#fff8df"/>
+                <stop offset=".58" stop-color="#d7b887"/>
+                <stop offset="1" stop-color="#aa8464"/>
+              </radialGradient>
+            </defs>
+            <path class="flower-stem" d="M60 63 C60 78 58 92 60 113" fill="none" stroke="#82998c" stroke-width="2" stroke-linecap="round"/>
+            <path class="flower-leaf" d="M59 88 C46 78 37 83 39 93 C47 97 54 94 59 88Z" fill="#a9bdae" stroke="#82998c" stroke-width="1"/>
+            <path class="flower-leaf" d="M60 99 C72 87 82 91 81 101 C73 106 66 104 60 99Z" fill="#bdcbbc" stroke="#82998c" stroke-width="1"/>
+            <g transform="rotate(0 60 51)"><ellipse class="petal" style="--petal-delay:.26s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(60 60 51)"><ellipse class="petal" style="--petal-delay:.34s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(120 60 51)"><ellipse class="petal" style="--petal-delay:.42s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(180 60 51)"><ellipse class="petal" style="--petal-delay:.5s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(240 60 51)"><ellipse class="petal" style="--petal-delay:.58s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(300 60 51)"><ellipse class="petal" style="--petal-delay:.66s" cx="60" cy="27" rx="13" ry="24" fill="url(#introPetal)"/></g>
+            <g transform="rotate(30 60 51)"><ellipse class="petal" style="--petal-delay:.48s" cx="60" cy="36" rx="8" ry="16" fill="#f6e7e7"/></g>
+            <g transform="rotate(90 60 51)"><ellipse class="petal" style="--petal-delay:.54s" cx="60" cy="36" rx="8" ry="16" fill="#eed8dd"/></g>
+            <g transform="rotate(150 60 51)"><ellipse class="petal" style="--petal-delay:.6s" cx="60" cy="36" rx="8" ry="16" fill="#f8ebe7"/></g>
+            <g transform="rotate(210 60 51)"><ellipse class="petal" style="--petal-delay:.66s" cx="60" cy="36" rx="8" ry="16" fill="#e7cfd6"/></g>
+            <g transform="rotate(270 60 51)"><ellipse class="petal" style="--petal-delay:.72s" cx="60" cy="36" rx="8" ry="16" fill="#f7e7e2"/></g>
+            <g transform="rotate(330 60 51)"><ellipse class="petal" style="--petal-delay:.78s" cx="60" cy="36" rx="8" ry="16" fill="#ead2d8"/></g>
+            <circle class="flower-center" cx="60" cy="51" r="11" fill="url(#introHeart)" stroke="rgba(255,255,255,.8)" stroke-width="2"/>
+          </svg>
           <h2>Дорогие гости</h2>
           <p>У нас скоро состоится особенный день, и мы будем счастливы видеть вас в нашем кругу друзей и близких, чтобы создать незабываемые моменты радости и веселья.</p>
           <p>Сделайте наш день еще более особенным своим присутствием!</p>
@@ -3398,7 +3529,7 @@
             <span class="swatch" style="--swatch:#e4c2c0" data-color="пудрово-розовый" aria-label="Пудрово-розовый"></span>
             <span class="swatch" style="--swatch:#f1bea0" data-color="персиковый" aria-label="Персиковый"></span>
             <span class="swatch" style="--swatch:#dfc5a9" data-color="песочный" aria-label="Песочный"></span>
-            <span class="swatch" style="--swatch:#e9d5c2" data-color="бежевый" aria-label="Бежевый"></span>
+            <span class="swatch" style="--swatch:#6f4e37" data-color="шоколадный" aria-label="Шоколадный"></span>
             <span class="swatch" style="--swatch:#aaa7a5" data-color="серый" aria-label="Серый"></span>
           </div>
           <p>Мы очень ждём и готовимся к нашему незабываемому дню! Поддержите нас Вашими улыбками и объятиями, а также красивыми нарядами в палитре мероприятия.</p>
@@ -3433,6 +3564,10 @@
             <a class="submit yandex-form-open" id="yandexFormLink" href="https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29/" target="_blank" rel="noopener noreferrer">Заполнить анкету</a>
             <iframe class="yandex-form-frame" id="yandexFormFrame" src="https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29?iframe=1" frameborder="0" name="ya-form-6a5a374390fa7b83ff9f5e29" width="650" title="Анкета гостей" loading="lazy"></iframe>
             <p class="form-note">Анкета откроется в отдельной вкладке. Если встроенная версия не загрузилась, нажмите кнопку выше.</p>
+            <div class="rsvp-complete-card" id="rsvpCompleteCard" role="status" aria-live="polite">
+              <strong>Спасибо за ответ!</strong>
+              <span>Анкета заполнена. Возвращаемся к приглашению.</span>
+            </div>
             <script src="https://forms.yandex.ru/_static/embed.js" defer></script>
           </div>
         </div>
@@ -3533,6 +3668,8 @@
     const wishCurrent = document.querySelector('[data-wish-current]');
     let currentWish = 0;
     let wishScrollFrame = 0;
+    let wishProgrammaticScroll = false;
+    let wishProgrammaticTimer = 0;
 
     const updateWishUi = () => {
       wishCurrent.textContent = String(currentWish + 1);
@@ -3542,10 +3679,15 @@
 
     const showWish = (nextIndex) => {
       currentWish = Math.max(0, Math.min(wishCards.length - 1, nextIndex));
+      wishProgrammaticScroll = true;
+      window.clearTimeout(wishProgrammaticTimer);
       const firstOffset = wishCards[0]?.offsetLeft ?? 0;
       const targetOffset = (wishCards[currentWish]?.offsetLeft ?? firstOffset) - firstOffset;
       wishTrack?.scrollTo({ left: targetOffset, behavior: reduceMotion ? 'auto' : 'smooth' });
       updateWishUi();
+      wishProgrammaticTimer = window.setTimeout(() => {
+        wishProgrammaticScroll = false;
+      }, reduceMotion ? 0 : 560);
     };
 
     wishPreviousButton?.addEventListener('click', () => showWish(currentWish - 1));
@@ -3553,6 +3695,7 @@
     wishTrack?.addEventListener('scroll', () => {
       window.cancelAnimationFrame(wishScrollFrame);
       wishScrollFrame = window.requestAnimationFrame(() => {
+        if (wishProgrammaticScroll) return;
         const firstOffset = wishCards[0]?.offsetLeft ?? 0;
         let nearestIndex = 0;
         let nearestDistance = Infinity;
@@ -3703,6 +3846,30 @@
     const YANDEX_FORM_URL = 'https://forms.yandex.ru/u/6a5a374390fa7b83ff9f5e29/';
     const yandexFormLink = document.querySelector('#yandexFormLink');
     if (yandexFormLink) yandexFormLink.href = YANDEX_FORM_URL;
+
+    const rsvpForm = document.querySelector('#rsvpForm');
+    const rsvpCompleteCard = document.querySelector('#rsvpCompleteCard');
+
+    const completeRsvp = () => {
+      rsvpForm?.classList.add('is-complete');
+      rsvpCompleteCard?.setAttribute('aria-hidden', 'false');
+      const rsvpSlide = document.querySelector('.rsvp');
+      if (rsvpSlide) rsvpSlide.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    };
+
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === 'wedding-rsvp-complete') completeRsvp();
+    });
+
+    if (new URLSearchParams(window.location.search).get('rsvp') === 'complete') {
+      activateInvitation();
+      window.setTimeout(() => {
+        showSlide(slides.findIndex((slide) => slide.classList.contains('rsvp')));
+        completeRsvp();
+        window.history.replaceState({}, '', window.location.pathname);
+      }, reduceMotion ? 120 : 2860);
+    }
   </script>
 </body>
 </html>

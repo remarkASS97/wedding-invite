@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f1ec">
+  <title>Спасибо за ответ</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      padding: 28px;
+      color: #4f5c55;
+      background: linear-gradient(155deg, #fbf8f2, #eee7e4);
+      font-family: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
+      text-align: center;
+    }
+    main {
+      width: min(100%, 460px);
+      padding: 42px 30px;
+      border: 1px solid rgba(131, 149, 140, .22);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, .62);
+      box-shadow: 0 20px 48px rgba(75, 87, 80, .1);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-family: "Iowan Old Style", Baskerville, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 9vw, 3.5rem);
+      font-weight: 400;
+    }
+    p { margin: 0; line-height: 1.65; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Спасибо!</h1>
+    <p>Ответ сохранён. Возвращаемся к приглашению…</p>
+  </main>
+  <script>
+    const invitationUrl = 'https://remarkass97.github.io/wedding-invite/wedding-invite-assets/wedding-mini-site.html?rsvp=complete';
+    const message = { type: 'wedding-rsvp-complete' };
+
+    if (window.parent !== window) {
+      window.parent.postMessage(message, window.location.origin);
+    } else {
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage(message, window.location.origin);
+      }
+      window.setTimeout(() => {
+        window.close();
+        window.setTimeout(() => window.location.replace(invitationUrl), 180);
+      }, 550);
+    }
+  </script>
+</body>
+</html>
